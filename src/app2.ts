@@ -2,6 +2,8 @@ import { makeWASocket, useMultiFileAuthState, DisconnectReason, Browsers, WAMess
 import P from 'pino'
 import { Boom } from '@hapi/boom';
 import path from 'path';
+import QRCode from "qrcode";
+const qrcode = require('qrcode-terminal');
 
 // Directorio para guardar el estado de la sesión
 const authPath = path.resolve(__dirname, '..', 'auth');
@@ -25,8 +27,8 @@ async function connectToWhatsApp(): Promise<void> {
     });
 
     // Eventos de conexión
-    sock.ev.on('connection.update', (update) => {
-        const { connection, lastDisconnect } = update;
+    sock.ev.on('connection.update', async (update) => {
+        const { connection, lastDisconnect, qr } = update;
         if (connection === 'close') {
             const shouldReconnect = (new Boom(lastDisconnect.error as any))?.output?.statusCode !== DisconnectReason.loggedOut;
             console.log('La conexión se cerró debido a', lastDisconnect.error, ', reconectando...', shouldReconnect);
@@ -35,6 +37,22 @@ async function connectToWhatsApp(): Promise<void> {
             }
         } else if (connection === 'open') {
             console.log('Conexión abierta. ¡El bot está listo!');
+        }
+        if (qr) {
+            console.log('Nuevo código qr generado!');
+            qrcode.generate(qr, { small: true });
+            QRCode.toDataURL(qr).then((url) => {
+                this.instance.qr = url;
+                this.instance.qrRetry++;
+                if (this.instance.qrRetry >= 3) {
+                    // close WebSocket connection
+                    this.instance.sock.ws.close();
+                    // remove all events
+                    this.instance.sock.ev.removeAllListeners();
+                    this.instance.qr = " ";
+                    console.log("socket connection terminated");
+                }
+            });
         }
     });
 
