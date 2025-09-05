@@ -18,10 +18,7 @@ async function connectToWhatsApp(): Promise<void> {
 
     const sock = makeWASocket({
         auth: state,
-        printQRInTerminal: true,
-        browser: Browsers.macOS('Desktop'),
-        version,
-        logger: P() // you can configure this as much as you want, even including streaming the logs to a ReadableStream for upload or saving to a file
+        logger: P(), // you can configure this as much as you want, even including streaming the logs to a ReadableStream for upload or saving to a file
     });
 
     // Eventos de conexión
