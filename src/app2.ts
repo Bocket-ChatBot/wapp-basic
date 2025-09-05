@@ -20,10 +20,21 @@ async function connectToWhatsApp(): Promise<void> {
 
     const sock = makeWASocket({
         auth: state,
-        printQRInTerminal: true,
-        browser: Browsers.macOS('Desktop'),
+        // browser: Browsers.macOS('Desktop'),
         version,
-        logger: P() // you can configure this as much as you want, even including streaming the logs to a ReadableStream for upload or saving to a file
+        // logger: P(), // you can configure this as much as you want, even including streaming the logs to a ReadableStream for upload or saving to a file,
+        defaultQueryTimeoutMs: 0,
+        connectTimeoutMs: 60000,
+        keepAliveIntervalMs: 10000,
+        emitOwnEvents: true,
+        fireInitQueries: true,
+        generateHighQualityLinkPreview: true,
+        syncFullHistory: true,
+        markOnlineOnConnect: true,
+        printQRInTerminal: false,
+        logger: P({
+            level: 'info'
+        })
     });
 
     // Eventos de conexión
@@ -44,7 +55,7 @@ async function connectToWhatsApp(): Promise<void> {
             QRCode.toDataURL(qr).then((url) => {
                 this.instance.qr = url;
                 this.instance.qrRetry++;
-                if (this.instance.qrRetry >= 3) {
+                if (this.instance.qrRetry >= 5) {
                     // close WebSocket connection
                     this.instance.sock.ws.close();
                     // remove all events
