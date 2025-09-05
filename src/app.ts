@@ -2,27 +2,11 @@ import { Client, Location, Poll, List, Buttons, LocalAuth } from "whatsapp-web.j
 
 const client = new Client({
     authStrategy: new LocalAuth(),
-    // proxyAuthentication: { username: 'username', password: 'password' },
-    /**
-     * This option changes the browser name from defined in user agent to custom.
-     */
-    // deviceName: 'Your custom name',
-    /**
-     * This option changes browser type from defined in user agent to yours. It affects the browser icon
-     * that is displayed in 'linked devices' section.
-     * Valid value are: 'Chrome' | 'Firefox' | 'IE' | 'Opera' | 'Safari' | 'Edge'.
-     * If another value is provided, the browser icon in 'linked devices' section will be gray.
-     */
-    // browserName: 'Firefox',
     puppeteer: { 
         // args: ['--proxy-server=proxy-server-that-requires-authentication.example.com'],
         headless: false,
+        executablePath: '/usr/bin/chromium',
     },
-    // pairWithPhoneNumber: {
-    //     phoneNumber: '96170100100' // Pair with phone number (format: <COUNTRY_CODE><PHONE_NUMBER>)
-    //     showNotification: true,
-    //     intervalMs: 180000 // Time to renew pairing code in milliseconds, defaults to 3 minutes
-    // }
 });
 
 // client initialize does not finish at ready now.
