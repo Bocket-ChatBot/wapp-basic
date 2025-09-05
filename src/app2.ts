@@ -8,6 +8,7 @@ const authPath = path.resolve(__dirname, '..', 'auth');
 
 // Función principal para conectar el bot
 async function connectToWhatsApp(): Promise<void> {
+    console.log(`authPath is:`, authPath);
     const { state, saveCreds } = await useMultiFileAuthState(authPath);
     
     // Fetch the latest Baileys version to ensure compatibility
