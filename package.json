@@ -10,9 +10,14 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/node": "^24.3.1",
     "typescript": "^4.9.5"
   },
   "dependencies": {
+    "@adiwajshing/baileys": "^5.0.0",
+    "@whiskeysockets/baileys": "^6.7.19",
+    "baileys": "^6.7.19",
+    "pino": "^9.9.2",
     "qrcode": "^1.5.4",
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.33.2"
