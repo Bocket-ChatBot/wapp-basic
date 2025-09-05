@@ -1,4 +1,5 @@
-import makeWASocket, { useMultiFileAuthState, DisconnectReason, Browsers, WAMessage, fetchLatestBaileysVersion } from '@adiwajshing/baileys';
+import makeWASocket, { useMultiFileAuthState, DisconnectReason, Browsers, WAMessage, fetchLatestBaileysVersion } from 'baileys'
+import P from 'pino'
 import { Boom } from '@hapi/boom';
 import path from 'path';
 
@@ -8,6 +9,8 @@ const authPath = path.resolve(__dirname, '..', 'auth');
 // Función principal para conectar el bot
 async function connectToWhatsApp(): Promise<void> {
     const { state, saveCreds } = await useMultiFileAuthState(authPath);
+    
+    // Fetch the latest Baileys version to ensure compatibility
     const { version } = await fetchLatestBaileysVersion();
 
     console.log(`Usando la versión de Baileys: ${version.join('.')}`);
@@ -16,7 +19,8 @@ async function connectToWhatsApp(): Promise<void> {
         auth: state,
         printQRInTerminal: true,
         browser: Browsers.macOS('Desktop'),
-        version
+        version,
+        logger: P() // you can configure this as much as you want, even including streaming the logs to a ReadableStream for upload or saving to a file
     });
 
     // Eventos de conexión
