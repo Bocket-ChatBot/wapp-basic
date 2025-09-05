@@ -1,4 +1,6 @@
 import { Client, Location, Poll, List, Buttons, LocalAuth } from "whatsapp-web.js";
+import QRCode from "qrcode";
+const qrcode = require('qrcode-terminal');
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -19,6 +21,8 @@ client.on('loading_screen', (percent, message) => {
 client.on('qr', async (qr) => {
     // NOTE: This event will not be fired if a session is specified.
     console.log('QR RECEIVED', qr);
+    qrcode.generate(qr, { small: true });
+    const base64Qr = await QRCode.toDataURL(qr);
 });
 
 client.on('code', (code) => {
