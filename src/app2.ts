@@ -1,4 +1,5 @@
-import makeWASocket, { useMultiFileAuthState, DisconnectReason, Browsers, WAMessage, fetchLatestBaileysVersion } from 'baileys'
+import { useMultiFileAuthState, DisconnectReason, Browsers, WAMessage, fetchLatestBaileysVersion } from 'baileys';
+import makeWASocket from '@adiwajshing/baileys'
 import P from 'pino'
 import { Boom } from '@hapi/boom';
 import path from 'path';
@@ -18,7 +19,10 @@ async function connectToWhatsApp(): Promise<void> {
 
     const sock = makeWASocket({
         auth: state,
-        logger: P(), // you can configure this as much as you want, even including streaming the logs to a ReadableStream for upload or saving to a file
+        // logger: P(), // you can configure this as much as you want, even including streaming the logs to a ReadableStream for upload or saving to a file
+        printQRInTerminal: true,
+        browser: Browsers.macOS('Desktop'),
+        version,
     });
 
     // Eventos de conexión
@@ -39,7 +43,7 @@ async function connectToWhatsApp(): Promise<void> {
     sock.ev.on('messages.upsert', async ({ messages }) => {
         console.log('Nuevo mensaje recibido:', JSON.stringify(messages, undefined, 2));
 
-        const msg: WAMessage = messages[0];
+        const msg = messages[0];
         if (!msg.key.fromMe && msg.message) {
             const messageText: string = (msg.message as any).conversation || (msg.message as any).extendedTextMessage?.text || ' ';
             console.log(`Mensaje de ${msg.key.remoteJid}: ${messageText}`);
